@@ -1,0 +1,39 @@
+function getTimeInGMTOffset(offset) {
+    const now = new Date();
+
+    // Get the current UTC time in milliseconds
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+
+    // Apply the offset (in milliseconds)
+    const gmtTime = new Date(utcTime + offset * 3600000);
+
+    // Format the time in HH:MM:SS
+    const hours = String(gmtTime.getHours()).padStart(2, '0');
+    const minutes = String(gmtTime.getMinutes()).padStart(2, '0');
+    const seconds = String(gmtTime.getSeconds()).padStart(2, '0');
+
+    return `${hours}:${minutes}:${seconds}, `;
+}
+
+function getDateInGMTOffset(offset) {
+    const now = new Date();
+
+    // Get the current UTC time in milliseconds
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+
+    // Apply the offset (in milliseconds)
+    const gmtDate = new Date(utcTime + offset * 3600000);
+
+    // Format the date in Russian locale (e.g., 1 января 2023 г., воскресенье)
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return gmtDate.toLocaleDateString('ru-RU', options);
+}
+
+// Set the offset for GMT+5
+const gmtPlusFive = 5;
+
+// Update the clock every second
+setInterval(() => {
+    document.getElementById('header_clock').textContent = getTimeInGMTOffset(gmtPlusFive);
+	document.getElementById('header_date').textContent = getDateInGMTOffset(gmtPlusFive);
+}, 1000);

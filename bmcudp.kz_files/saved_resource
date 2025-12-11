@@ -1,0 +1,17 @@
+function sendGetRequest(url,callback,widgetId)
+{var request=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");request.onreadystatechange=function()
+{if(request.readyState===XMLHttpRequest.DONE&&request.status===200)
+{callback(widgetId,request.responseText)}};request.open('GET',url);request.send()}
+function sendPostRequest(url,callback,params,widgetId)
+{var request=window.XMLHttpRequest?new XMLHttpRequest():new ActiveXObject("Microsoft.XMLHTTP");request.onreadystatechange=function()
+{if(request.readyState===XMLHttpRequest.DONE&&request.status===200)
+{callback(request.responseText,widgetId)}};request.open('POST',url,!0);request.setRequestHeader('Content-Type','application/x-www-form-urlencoded');request.send(params)}
+function updateWidgetsContent(data,id){data=JSON.parse(data);if(data.hasOwnProperty("html")){document.getElementById(id).innerHTML=data.html}
+if(data.hasOwnProperty("class")){document.getElementById(id).className=data["class"]}
+if(data.hasOwnProperty("js")){var script=document.createElement('script');script.type="text/javascript";script.async=!1;script.text=data.js;document.head.appendChild(script)}
+if(data.hasOwnProperty("error_code")){document.getElementById(id).innerHTML='';console.log('https://static1.meteolabs.kz / Error: '+data.error_msg+' (Error code '+data.error_code+')')}}
+function getWidgetData(widgetId,i){var widgetParams=getWidgetParams(widgetId);widgetParams.i=i;var a=JSON.stringify(widgetParams);var h=document.getElementById(widgetId).innerHTML;var params='a='+encodeURIComponent(a)+'&h='+encodeURIComponent(h)+'&id='+widgetId+'&task=widget';sendPostRequest('https://static1.meteolabs.kz/api/',updateWidgetsContent,params,widgetId)}
+function loadWidget(widgetId){var widgetParams=getWidgetParams(widgetId);if(widgetParams.loc!==undefined){sendGetRequest('https://api.ipify.org/',getWidgetData,widgetId)}
+else{getWidgetData(widgetId,null)}}
+function getWidgetParams(widgetId){return JSON.parse(document.getElementById(widgetId).getAttribute("a"))}
+loadWidget('id391a0c08775b0');
