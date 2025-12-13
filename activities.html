@@ -1,32 +1,48 @@
 <script>
-document.addEventListener("click", function (e) {
-  const a = e.target.closest("a");
-  if (!a) return;
+document.addEventListener("DOMContentLoaded", function () {
 
-  const t = a.textContent.trim();
+  document.querySelectorAll("a").forEach(function (a) {
 
-  const rules = [
-    [/О больнице|Администрация|Политика|этике|Послания|Нормативно/i, "about.html"],
-    [/Услуги|цены/i, "service.html"],
-    [/Для пациента/i, "patients.html"],
-    [/Направления/i, "activities.html"],
-    [/Обратная связь/i, "obr.html"],
-    [/International/i, "int.html"],
-    [/Наука|образование/i, "nauka.html"],
-    [/ОСМС|ГОБМП/i, "index.html"],
-    [/Наши доктора|CHECK UP/i, "https://bmcudp.org"]
-  ];
+    // КЛОНИРУЕМ ссылку — так удаляются ВСЕ обработчики
+    const clean = a.cloneNode(true);
 
-  for (const [re, url] of rules) {
-    if (re.test(t)) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      e.stopPropagation();
-      window.location.href = url;
-      return false;
+    const text = clean.textContent.trim();
+
+    if (/О больнице|Администрация|Политика|этике|Послания|Нормативно/i.test(text)) {
+      clean.href = "about.html";
     }
-  }
-}, true);
+    else if (/Услуги|цены/i.test(text)) {
+      clean.href = "service.html";
+    }
+    else if (/Для пациента/i.test(text)) {
+      clean.href = "patients.html";
+    }
+    else if (/Направления/i.test(text)) {
+      clean.href = "activities.html";
+    }
+    else if (/Обратная связь/i.test(text)) {
+      clean.href = "obr.html";
+    }
+    else if (/International/i.test(text)) {
+      clean.href = "int.html";
+    }
+    else if (/Наука|образование/i.test(text)) {
+      clean.href = "nauka.html";
+    }
+    else if (/ОСМС|ГОБМП/i.test(text)) {
+      clean.href = "index.html";
+    }
+    else if (/Наши доктора|CHECK UP/i.test(text)) {
+      clean.href = "https://bmcudp.org";
+      clean.target = "_blank";
+    } else {
+      return;
+    }
+
+    a.replaceWith(clean);
+  });
+
+});
 </script>
 
 <!DOCTYPE html>
